@@ -58,110 +58,157 @@ str(wwine$quality)
 ```
 
 
-Looking at histograms of other variables now to determine the distributions.
+Now I will look at histograms of all the other variables starting with fixed acidity to determine their distributions.
 
 
 ```{r echo=FALSE, warning=FALSE, histogram_0}
 # Creating histograms for all variables
-a1 <- ggplot(aes(x = fixed.acidity), data = wwine) +
+ggplot(aes(x = fixed.acidity), data = wwine) +
   geom_histogram()
-a2 <- ggplot(aes(x = volatile.acidity), data = wwine) +
-  geom_histogram()
-a3 <- ggplot(aes(x = citric.acid), data = wwine) +
-  geom_histogram()
-a4 <- ggplot(aes(x = residual.sugar), data = wwine) +
-  geom_histogram()
-a5 <- ggplot(aes(x = chlorides), data = wwine) +
-  geom_histogram()
-a6 <- ggplot(aes(x = free.sulfur.dioxide), data = wwine) +
-  geom_histogram()
-a7 <- ggplot(aes(x = total.sulfur.dioxide), data = wwine) +
-  geom_histogram()
-a8 <- ggplot(aes(x = density), data = wwine) +
-  geom_histogram()
-a9 <- ggplot(aes(x = pH), data = wwine) +
-  geom_histogram()
-a10 <- ggplot(aes(x = sulphates), data = wwine) +
-  geom_histogram()
-a11 <- ggplot(aes(x = alcohol), data = wwine) +
-  geom_histogram()
-# Displaying all histograms in one plot
-grid.arrange(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11)
-
 ```
 
+Adjusting the binwidth and removing outliers from the above graph.
 
-Adjusting the binwidths to make the distributions clearer.
+```{r echo=FALSE, warning=FALSE, histogram_01}
+ggplot(aes(x = fixed.acidity), data = wwine) +
+  geom_histogram(binwidth = 0.1) +
+  xlim(quantile(wwine$fixed.acidity, 0.01),
+       quantile(wwine$fixed.acidity, 0.99))
+```
 
+The fixed acidity clearly follows a normal distribution with mean 6.855. The median value is 6.8.
 
+From now on I will preadjust the binwidth and remove outliers from histograms.
+
+Moving on to volatile acidity
 
 ```{r echo=FALSE, warning=FALSE, histogram_1}
-
-# Histograms with adjusted binwidths
-b1 <- ggplot(aes(x = fixed.acidity), data = wwine) +
-  geom_histogram(binwidth = 0.1)
-b2 <- ggplot(aes(x = volatile.acidity), data = wwine) +
-  geom_histogram(binwidth = 0.01)
-b3 <- ggplot(aes(x = citric.acid), data = wwine) +
-  geom_histogram(binwidth = 0.02)
-b4 <- ggplot(aes(x = residual.sugar), data = wwine) +
-  geom_histogram(binwidth = 1)
-b5 <- ggplot(aes(x = chlorides), data = wwine) +
-  geom_histogram(binwidth = 0.005)
-b6 <- ggplot(aes(x = free.sulfur.dioxide), data = wwine) +
-  geom_histogram(binwidth = 5)
-b7 <- ggplot(aes(x = total.sulfur.dioxide), data = wwine) +
-  geom_histogram(binwidth = 10)
-b8 <- ggplot(aes(x = density), data = wwine) +
-  geom_histogram(binwidth = 0.001)
-b9 <- ggplot(aes(x = pH), data = wwine) +
-  geom_histogram(binwidth = 0.05)
-b10 <- ggplot(aes(x = sulphates), data = wwine) +
-  geom_histogram(binwidth = 0.02)
-b11 <- ggplot(aes(x = alcohol), data = wwine) +
-  geom_histogram(binwidth = 0.1)
-
-grid.arrange(b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11)
+ggplot(aes(x = volatile.acidity), data = wwine) +
+  geom_histogram(binwidth = 0.01) +
+  xlim(quantile(wwine$volatile.acidity, 0.01),
+       quantile(wwine$volatile.acidity, 0.99))
 
 ```
 
+Even this distribution is approximately normal. The mean volatile acidity is 0.2782 while the median is 0.26.
 
-All the distributions are approximately normal except ones for residual sugar and chlorides. Both of them are highly right skewed. We will do a logarithmic transformation of residual sugar and chlorides, keeping the other histograms same.
-
+Now I will plot the distribution for citric acid.
 
 ```{r echo=FALSE, warning=FALSE, histogram_2}
-
-# Histograms with adjusted binwidths and changed scale
-c1 <- ggplot(aes(x = fixed.acidity), data = wwine) +
-  geom_histogram(binwidth = 0.1)
-c2 <- ggplot(aes(x = volatile.acidity), data = wwine) +
-  geom_histogram(binwidth = 0.01)
-c3 <- ggplot(aes(x = citric.acid), data = wwine) +
-  geom_histogram(binwidth = 0.02)
-c4 <- ggplot(aes(x = residual.sugar), data = wwine) +
-  geom_histogram(binwidth = 0.05) + 
-  scale_x_log10()
-c5 <- ggplot(aes(x = chlorides), data = wwine) +
-  geom_histogram(binwidth = 0.04) +
-  scale_x_log10()
-c6 <- ggplot(aes(x = free.sulfur.dioxide), data = wwine) +
-  geom_histogram(binwidth = 5)
-c7 <- ggplot(aes(x = total.sulfur.dioxide), data = wwine) +
-  geom_histogram(binwidth = 10)
-c8 <- ggplot(aes(x = density), data = wwine) +
-  geom_histogram(binwidth = 0.001)
-c9 <- ggplot(aes(x = pH), data = wwine) +
-  geom_histogram(binwidth = 0.05)
-c10 <- ggplot(aes(x = sulphates), data = wwine) +
-  geom_histogram(binwidth = 0.02)
-c11 <- ggplot(aes(x = alcohol), data = wwine) +
-  geom_histogram(binwidth = 0.1)
-
-grid.arrange(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11)
-
+ggplot(aes(x = citric.acid), data = wwine) +
+  geom_histogram(binwidth = 0.02) +
+  xlim(quantile(wwine$citric.acid, 0.01),
+       quantile(wwine$citric.acid, 0.99))
 ```
 
-Now the chlorides follows a normal distribution and the residual sugar has a clear bimodal distribution.
+Citric acid too follows a normal distribution with mean 0.3342 and median 0.32.
+
+Moving on to residual sugar.
+
+```{r echo=FALSE, warning=FALSE, histogram_3}
+ggplot(aes(x = residual.sugar), data = wwine) +
+  geom_histogram(binwidth = 0.5) +
+  xlim(quantile(wwine$residual.sugar,0.01),
+       quantile(wwine$residual.sugar,0.99))
+```
+
+This distribution is highly right skewed which can be confirmed by the fact that there is a high difference between mean (6.391) and median (5.2). I will apply a log transformation now to try and make this into a normal distribution.
+
+```{r echo=FALSE, warning=FALSE, histogram_31}
+ggplot(aes(x = residual.sugar), data = wwine) +
+  geom_histogram(binwidth = 0.05) +
+  xlim(quantile(wwine$residual.sugar,0.01),
+       quantile(wwine$residual.sugar,0.99)) +
+  scale_x_log10()
+  
+```
+
+It can be observed that residual sugar has a bimodal distribution after log transformation.
+
+Now I will plot a histogram of chlorides.
+
+```{r echo=FALSE, warning=FALSE, histogram_4}
+ggplot(aes(x = chlorides), data = wwine) +
+  geom_histogram(binwidth = 0.005) +
+  xlim(quantile(wwine$chlorides,0.01),
+       quantile(wwine$chlorides,0.99))
+```
+
+Even this distribution is highly right skewed which. The mean and median values of chlorides are 0.04577 and 0.043 respectively. I will now apply axis transformation to try and convert this to a normal distribution.
+
+```{r echo=FALSE, warning=FALSE, histogram_41}
+ggplot(aes(x = chlorides), data = wwine) +
+  geom_histogram(binwidth = 0.04) +
+  xlim(quantile(wwine$chlorides,0.01),
+       quantile(wwine$chlorides,0.99)) +
+  scale_x_log10()
+```
+
+Chlorides has now been converted to a normal distribution after log scaling.
+
+Moving on to free sulfur dioxide.
+
+```{r echo=FALSE, warning=FALSE, histogram_5}
+ggplot(aes(x = free.sulfur.dioxide), data = wwine) +
+  geom_histogram(binwidth = 2) +
+  xlim(quantile(wwine$free.sulfur.dioxide,0.01),
+       quantile(wwine$free.sulfur.dioxide,0.99))
+```
+
+Free sulfur dioxide has a normal distribution with median 34.00 and mean 35.31.
+
+Moving on to toal sulfur dioxide.
+
+```{r echo=FALSE, warning=FALSE, histogram_6}
+ggplot(aes(x = total.sulfur.dioxide), data = wwine) +
+  geom_histogram(binwidth = 6) +
+  xlim(quantile(wwine$total.sulfur.dioxide,0.01),
+       quantile(wwine$total.sulfur.dioxide,0.99))
+```
+
+Total sulfur dioxide also has a normal distribution. The median and mean values are 134 and 138.4 respectively.
+
+Plotting the histogram for density now.
+
+```{r echo=FALSE, warning=FALSE, histogram_7}
+ggplot(aes(x = density), data = wwine) +
+  geom_histogram(binwidth = 0.0003) +
+  xlim(quantile(wwine$density,0.01),
+       quantile(wwine$density,0.99))
+```
+
+Even density follows and approximate normal distribution with mean 0.994 and median 0.9937.
+
+Moving on to pH now.
+
+```{r echo=FALSE, warning=FALSE, histogram_8}
+ggplot(aes(x = pH), data = wwine) +
+  geom_histogram(binwidth = 0.03) +
+  xlim(quantile(wwine$pH,0.01),
+       quantile(wwine$pH,0.99))
+```
+
+pH clearly has an almost perfect normal distribution which is validated by the fact that mean (3.188) and median (3.180) are almost similar.
+
+Plotting the histogram for sulphates now.
+
+```{r echo=FALSE, warning=FALSE, histogram_9}
+ggplot(aes(x = sulphates), data = wwine) +
+  geom_histogram(binwidth = 0.02) +
+  xlim(quantile(wwine$sulphates,0.01),
+       quantile(wwine$sulphates,0.99))
+```
+
+Sulphates also follows an approximate normal distribution. The mean and median values are 0.4898 and 0.47 respectively.
+
+Moving on to the last variable alcohol.
+
+```{r echo=FALSE, warning=FALSE, histogram_10}
+ggplot(aes(x = alcohol), data = wwine) +
+  geom_histogram(binwidth = 0.1)
+```
+
+Alcohol does not follow a perfect normal distribution but we can approximate it as such. This can be validated by the fact that there is little difference between mean (10.51) and median (10.4).
 
 
 I would also like to create a new variable for bound sulfur dioxide since we have variables for total and free sulfur dioxide. This new variable could be useful in future analysis.
@@ -176,6 +223,8 @@ ggplot(aes(x = bound.sulfur.dioxide), data = wwine) +
   geom_histogram(binwidth = 10)
 
 ```
+
+Bouns sulfur dioxde also follows a normal distribution with mean 103.1 and median 100.
 
 
 # Univariate Analysis
